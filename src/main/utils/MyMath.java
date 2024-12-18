@@ -20,4 +20,8 @@ public class MyMath {
     public static List<Integer> diffs(List<Integer> l) {
         return IntStream.range(0, l.size() - 1).mapToObj(i -> l.get(i + 1) - l.get(i)).toList();
     }
+
+    public static int posMod(int nom, int div) {
+        return ((nom % div) + div) % div;
+    }
 }
