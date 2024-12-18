@@ -1,6 +1,8 @@
 package main.utils;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class Grid {
 
@@ -51,5 +53,17 @@ public class Grid {
             }
         }
         return null;
+    }
+
+    public Set<Point> findAll(char c) {
+        Set<Point> found = new HashSet<>();
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                if (data.get(y).charAt(x) == c) {
+                    found.add(new Point(x, y));
+                }
+            }
+        }
+        return found;
     }
 }
