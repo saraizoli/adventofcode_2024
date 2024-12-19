@@ -18,7 +18,6 @@ public class Day14 extends Day<Long> {
     private final int h;
     private final int w;
 
-    //ignoring the "fewest tokens" part, as each machine only has 1 real solution as the button vectors are non colinear luckily
     public Day14() {
 //        List<String> raw = getReader().readAsStringList("day14_sample.txt");
 //        h = 7;

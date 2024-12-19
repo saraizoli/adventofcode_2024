@@ -21,6 +21,8 @@ public record Point(int x, int y) {
     public static final Point[] DIRS = new Point[] {U, D, L, R};
     public static final Point[] DIRS_ALL = new Point[] {U, D, L, R, UL, UR, DL, DR};
     public static final Map<String, Point> DIRS_MAP = Map.of("U", U, "D", D, "L", L, "R", R, ">", R, "<", L);
+    public static final Map<Character, Point> DIRS_CHAR_MAP = Map.of('U', U, 'D', D, 'L', L, 'R', R, '^', D,'v' , U, '>', R, '<', L);
+
 
     public static Point from(String s) {
         String[] t = s.split(",");
