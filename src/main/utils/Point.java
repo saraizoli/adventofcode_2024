@@ -18,10 +18,10 @@ public record Point(int x, int y) {
     public static Point DL = new Point(-1, -1);
     public static Point DR = new Point(1, -1);
 
-    public static final Point[] DIRS = new Point[] {U, D, L, R};
-    public static final Point[] DIRS_ALL = new Point[] {U, D, L, R, UL, UR, DL, DR};
+    public static final Point[] DIRS = new Point[]{U, D, L, R};
+    public static final Point[] DIRS_ALL = new Point[]{U, D, L, R, UL, UR, DL, DR};
     public static final Map<String, Point> DIRS_MAP = Map.of("U", U, "D", D, "L", L, "R", R, ">", R, "<", L);
-    public static final Map<Character, Point> DIRS_CHAR_MAP = Map.of('U', U, 'D', D, 'L', L, 'R', R, '^', D,'v' , U, '>', R, '<', L);
+    public static final Map<Character, Point> DIRS_CHAR_MAP = Map.of('U', U, 'D', D, 'L', L, 'R', R, '^', D, 'v', U, '>', R, '<', L);
 
 
     public static Point from(String s) {
@@ -60,6 +60,7 @@ public record Point(int x, int y) {
     public Stream<Point> neighbours() {
         return Arrays.stream(DIRS).map(this::add);
     }
+
     public Stream<Point> neighboursAll() {
         return Arrays.stream(DIRS_ALL).map(this::add);
     }
@@ -76,11 +77,21 @@ public record Point(int x, int y) {
     public boolean isInRect(Point bottomLeft, Point topRight) {
         return x >= bottomLeft.x && x < topRight.x && y >= bottomLeft.y && y < topRight.y;
     }
+
+    public boolean isInRectClosed(Point bottomLeft, Point topRight) {
+        return x >= bottomLeft.x && x <= topRight.x && y >= bottomLeft.y && y <= topRight.y;
+    }
+
     public boolean isInRect(Point topRight) {
         return isInRect(O, topRight);
     }
 
+    public boolean isInRectClosed(Point topRight) {
+        return isInRectClosed(O, topRight);
+    }
+
     public Point rotate(int i) {
+        //noinspection SuspiciousNameCombination
         return i < 0 ? new Point(-1 * y, x) : new Point(y, -1 * x);
     }
 }
