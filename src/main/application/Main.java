@@ -1,12 +1,12 @@
 package main.application;
 
-import main.day19.Day19;
+import main.day20.Day20;
 import main.utils.Day;
 
 public class Main {
     public static void main(String[] args) {
 
-        Day<?> day = new Day19();
+        Day<?> day = new Day20();
         day.printSolution1WithTime();
         day.printSolution2WithTime();
 
