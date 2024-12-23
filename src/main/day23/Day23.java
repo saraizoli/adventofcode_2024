@@ -7,16 +7,13 @@ import java.util.stream.Collectors;
 
 public class Day23 extends Day<Integer> {
     private final Map<String, Set<String>> edges;
-    private final Set<Set<String>> base;
 
     public Day23() {
 //        List<String> raw = getReader().readAsStringList("day23_sample.txt");
         List<String> raw = getReader().readAsStringList(23);
         edges = new HashMap<>();
-        base = new HashSet<>();
         for (String s : raw) {
             String[] t = s.split("-");
-            base.add(Set.of(t[0], t[1]));
             edges.computeIfAbsent(t[0], k -> new HashSet<>()).add(t[1]);
             edges.computeIfAbsent(t[1], k -> new HashSet<>()).add(t[0]);
         }
@@ -39,34 +36,29 @@ public class Day23 extends Day<Integer> {
         return cliqs.size();
     }
 
-    private Set<Set<String>> nextSizeCliq(Set<Set<String>> prev) {
-        Set<Set<String>> next = new HashSet<>();
-        prev.parallelStream().forEach(existingCliq -> {
-            Set<String> commonEdges = null;
-            for (String cliqMember : existingCliq) {
-                if (commonEdges == null) {
-                    commonEdges = new HashSet<>(edges.get(cliqMember));
-                } else {
-                    commonEdges.retainAll(edges.get(cliqMember));
-                }
-            }
-            commonEdges.forEach(e -> {
-                Set<String> newCliq = new HashSet<>(existingCliq);
-                newCliq.add(e);
-                next.add(newCliq);
-            });
-        });
-        return next;
+    //https://en.wikipedia.org/wiki/Bron%E2%80%93Kerbosch_algorithm#With_pivoting around random vertex
+    //seems like input is a lot of 12 clicks with 1 13 click - this pivot makes all recursive calls run on 1 element...
+    private Set<String> getBiggestCliq(Set<String> unused, Set<String> cliq) {
+        if (unused.isEmpty()) {
+            return cliq;
+        }
+//        String pivot = unused.stream().max(Comparator.comparingInt(v -> edges.get(v).size())).orElseThrow();
+        String pivot = unused.stream().findFirst().orElseThrow();
+        return (unused.size() > 20 ? unused.parallelStream() : unused.stream())
+                .filter(v -> !edges.get(pivot).contains(v))
+                .map(v -> {
+                    Set<String> nextUnused = new HashSet<>(unused);
+                    Set<String> nextCliq = new HashSet<>(cliq);
+                    nextUnused.retainAll(edges.get(v));
+                    nextCliq.add(v);
+                    return getBiggestCliq(nextUnused, nextCliq);
+                }).max(Comparator.comparingInt(Set::size)).orElseThrow();
     }
 
 
     @Override
     public Integer getSolution2() {
-        Set<Set<String>> curr = base;
-        while (curr.size() > 1) {
-            curr = nextSizeCliq(curr);
-        }
-        String res = curr.stream().findFirst().orElseThrow().stream().sorted().collect(Collectors.joining(","));
+        String res = getBiggestCliq(edges.keySet(), Collections.emptySet()).stream().sorted().collect(Collectors.joining(","));
         System.out.println(res);
         return 0;
     }
