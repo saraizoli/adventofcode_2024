@@ -41,7 +41,7 @@ public class Day23 extends Day<Integer> {
 
     private Set<Set<String>> nextSizeCliq(Set<Set<String>> prev) {
         Set<Set<String>> next = new HashSet<>();
-        for (Set<String> existingCliq : prev) {
+        prev.parallelStream().forEach(existingCliq -> {
             Set<String> commonEdges = null;
             for (String cliqMember : existingCliq) {
                 if (commonEdges == null) {
@@ -51,11 +51,11 @@ public class Day23 extends Day<Integer> {
                 }
             }
             commonEdges.forEach(e -> {
-                Set<String> toAdd = new HashSet<>(existingCliq);
-                toAdd.add(e);
-                next.add(toAdd);
+                Set<String> newCliq = new HashSet<>(existingCliq);
+                newCliq.add(e);
+                next.add(newCliq);
             });
-        }
+        });
         return next;
     }
 
